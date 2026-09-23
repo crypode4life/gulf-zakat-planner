@@ -1,0 +1,8 @@
+{
+  "name": "gulf-zakat-planner",
+  "version": "1.0.0",
+  "description": "AI Zakat Calculator for Gulf professionals",
+  "engines": {
+    "node": "24.x"
+  }
+}

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Zakat Calculator - Crypode</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #0A0E27;
+            --darker: #050812;
+            --text: #E8E8E8;
+            --accent: #1a1f3a;
+            --success: #10B981;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--accent);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            background: var(--darker);
+            border: 1px solid var(--gold);
+            color: var(--text);
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .currency-toggle {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .currency-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--darker);
+            border: 1px solid var(--gold);
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .currency-btn.active {
+            background: var(--gold);
+            color: var(--darker);
+        }
+
+        .section-title {
+            color: var(--gold);
+            font-weight: 700;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold);
+            color: var(--darker);
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #E8C547;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: var(--darker);
+        }
+
+        .results {
+            grid-column: 1 / -1;
+        }
+
+        .summary {
+            background: var(--darker);
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .summary h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .summary-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--gold);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--accent);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #EF4444;
+            padding: 15px;
+            border-radius: 6px;
+            color: #FECACA;
+            margin: 15px 0;
+        }
+
+        .guidance {
+            background: var(--darker);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--accent);
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕌 Gulf Zakat Planner</h1>
+            <p style="color: var(--text); opacity: 0.9;">Personalized Islamic zakat guidance</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: var(--gold);">Part of <a href="https://crypode.com" target="_blank" style="color: var(--gold); text-decoration: none;">Crypode</a></p>
+        </header>
+
+        <div class="layout">
+            <div class="card">
+                <h2>Your Assets</h2>
+
+                <div class="form-group">
+                    <label>Currency</label>
+                    <div class="currency-toggle">
+                        <button type="button" class="currency-btn active" data-currency="OMR">OMR</button>
+                        <button type="button" class="currency-btn" data-currency="AED">AED</button>
+                        <button type="button" class="currency-btn" data-currency="SAR">SAR</button>
+                        <button type="button" class="currency-btn" data-currency="USD">USD</button>
+                    </div>
+                </div>
+
+                <div class="section-title">💰 Cash & Savings</div>
+                <div class="form-group">
+                    <label>Total Amount</label>
+                    <input type="number" id="cash" placeholder="10000" min="0" step="100">
+                </div>
+
+                <div class="section-title">🏆 Gold</div>
+                <div class="form-group">
+                    <label>Grams</label>
+                    <input type="number" id="goldGrams" placeholder="50" min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Price per Gram</label>
+                    <input type="number" id="goldPrice" placeholder="60" min="0" step="1">
+                </div>
+
+                <div class="section-title">📈 Investments</div>
+                <div class="form-group">
+                    <label>Stocks & Funds</label>
+                    <input type="number" id="stocks" placeholder="5000" min="0" step="100">
+                </div>
+                <div class="form-group">
+                    <label>Cryptocurrency</label>
+                    <input type="number" id="crypto" placeholder="0" min="0" step="100">
+                </div>
+
+                <button onclick="calculateZakat()">Calculate Zakat</button>
+                <button class="btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+
+            <div class="card results">
+                <h2>Your Zakat Calculation</h2>
+                <div id="resultsContainer">
+                    <p style="color: var(--text); opacity: 0.7; text-align: center; padding: 40px 0;">
+                        Enter your assets and calculate
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🕌 <strong>Disclaimer:</strong> For informational purposes only. Consult an Islamic scholar for your situation.</p>
+        </footer>
+    </div>
+
+    <script>
+        let selectedCurrency = 'OMR';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-currency]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('[data-currency]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedCurrency = btn.dataset.currency;
+                });
+            });
+        });
+
+        function resetForm() {
+            document.getElementById('cash').value = '';
+            document.getElementById('goldGrams').value = '';
+            document.getElementById('goldPrice').value = '';
+            document.getElementById('stocks').value = '';
+            document.getElementById('crypto').value = '';
+        }
+
+        async function calculateZakat() {
+            const cash = parseFloat(document.getElementById('cash').value) || 0;
+            const goldGrams = parseFloat(document.getElementById('goldGrams').value) || 0;
+            const goldPrice = parseFloat(document.getElementById('goldPrice').value) || 0;
+            const stocks = parseFloat(document.getElementById('stocks').value) || 0;
+            const crypto = parseFloat(document.getElementById('crypto').value) || 0;
+
+            if (cash + goldGrams + stocks + crypto === 0) {
+                showError('Please enter at least one asset value');
+                return;
+            }
+
+            document.getElementById('resultsContainer').innerHTML = '<div class="loading"><span class="spinner"></span>Calculating...</div>';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: `Calculate zakat. Assets: Cash ${cash} ${selectedCurrency}, Gold ${goldGrams}g @ ${goldPrice}/${selectedCurrency}, Stocks ${stocks}, Crypto ${crypto}. Return JSON: {totalAssets: number, nisabMet: boolean, zakatDue: number, zakatPercentage: number, summary: string, guidance: string}`
+                    })
+                });
+
+                const data = await response.json();
+                const textContent = data.content.find(block => block.type === 'text');
+                if (!textContent) throw new Error('No response');
+                
+                const responseText = textContent.text.trim().replace(/```json|```/g, '').trim();
+                const calc = JSON.parse(responseText);
+                displayResults(calc);
+            } catch (e) {
+                console.error('Error:', e);
+                showError('Failed to calculate. Try again.');
+            }
+        }
+
+        function displayResults(calc) {
+            const status = calc.nisabMet ? '<span style="color: var(--success);">✓ Nisab met</span>' : '<span style="color: var(--warning);">⚠ Below threshold</span>';
+            
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="summary">
+                    <h3>Summary</h3>
+                    <p>${status}</p>
+                    <div class="summary-row" style="margin-top: 15px;">
+                        <div><span class="label">Total Assets:</span><br>${calc.totalAssets.toFixed(2)} ${selectedCurrency}</div>
+                        <div><span class="label">Rate:</span><br>${calc.zakatPercentage.toFixed(2)}%</div>
+                    </div>
+                    <div class="summary-row">
+                        <div colspan="2"><span class="label" style="font-size: 1.1em;">Zakat Due:</span><br><span style="color: var(--gold); font-size: 1.3em; font-weight: 700;">${calc.zakatDue.toFixed(2)} ${selectedCurrency}</span></div>
+                    </div>
+                </div>
+                <div class="guidance">
+                    <strong>Guidance:</strong><br>${calc.guidance}
+                </div>
+                <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 15px; margin-top: 15px;">
+                    <p style="color: var(--text);">${calc.summary}</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('resultsContainer').innerHTML = `<div class="error">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
