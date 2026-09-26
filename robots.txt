@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://gulf-zakat-planner.vercel.app/sitemap.xml
+Sitemap: https://zakat.crypode.com/sitemap.xml
